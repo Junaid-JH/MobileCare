@@ -1,0 +1,54 @@
+﻿@using MobileCare.Models.ViewModels
+@model LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+    ViewData["HideLoginButton"] = true; // Flag to hide login/logout button
+}
+    @section HtmlHead{
+    <link rel="stylesheet" href="~/css/login.css" />
+    }
+
+
+<section id="login-page" class="vh-100">
+    
+    <div class="container-fluid h-custom">
+        @if (TempData["Error"] != null)
+        {
+            <div id="error-message" class="col-md-12 alert alert-danger">
+                <span><b>Sorry!</b> - @TempData["Error"]</span>
+            </div>
+        }
+        <div class="row d-flex justify-content-center align-items-center h-100">            
+            <div class="col-md-9 col-lg-6 col-xl-5 mb-4" data-aos="fade-right">
+                <img src="~/img/mobilecare-slide1.png"
+                     class="img-fluid" alt="mobilecare logo">
+            </div>
+            <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                <form asp-controller="Account" asp-action="Login" method="post" data-aos="fade-left">                   
+         
+                    <!-- Email input -->
+                         <span asp-validation-for="Email" class="text-danger"></span> 
+                    <div id="login-email"   class="form-outline mb-3">                        
+                        <input type="email" asp-for="Email" class="form-control form-control-lg"
+                               placeholder="Enter a valid email address" /> 
+                        <i class="fa-solid fa-envelope"></i>                 
+                    </div>
+
+                    <!-- Password input -->
+                        <span asp-validation-for="Password" class="text-danger"></span> 
+                    <div id="login-password"  class="form-outline mb-4">
+                        <input type="password" asp-for="Password" class="form-control form-control-lg"
+                               placeholder="Enter password" />
+                        <i class="fa-solid fa-lock"></i>                     
+                    </div>
+
+                   
+                    <div class="text-center text-lg-start">                      
+                        <button id="login-button" class="login-btn" type="submit"><span class="d-none d-md-inline"></span> Login </button>                        
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>    
+</section>

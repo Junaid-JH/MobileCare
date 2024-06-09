@@ -1,0 +1,51 @@
+﻿/*--------------------------------------------------------------
+# Booking
+--------------------------------------------------------------*/
+
+#section-booking {
+    margin-top: 130px;
+}
+
+table td,
+table th {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+thead th {
+    color: #fff;
+}
+
+.card {
+    border-radius: .5rem;
+}
+
+.table-scroll {
+    border-radius: .5rem;
+}
+
+    .table-scroll table thead th {
+        font-size: 1.25rem;
+    }
+
+.dynamic-height-table {
+    max-height: calc(100vh - 150px); /* Adjust the height based on other elements on page */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
+}
+
+.thead-bgcolour {
+    background: #3fbbc0;
+}
+
+#patient-address {
+    font-size: 12px;
+    color: GrayText;
+}
+#section-booking a:hover{
+    color: black !important;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+

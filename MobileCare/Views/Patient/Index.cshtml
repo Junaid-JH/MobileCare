@@ -1,0 +1,90 @@
+﻿@using System.Net
+@using System.Linq
+@model IEnumerable<MobileCare.Models.ViewModels.PatientActivityReportViewModel>
+
+@{
+    ViewData["Title"] = "Patient";
+}
+
+@section HtmlHead {
+    <link rel="stylesheet" href="~/css/booking.css" />
+    <style>
+        .wrap-text {
+            white-space: pre-wrap; /* This will allow the text to wrap onto multiple lines */
+            word-wrap: break-word; /* This will break the word if it exceeds the width of the cell */
+        }
+    </style>
+}
+
+@section HtmlHeader {
+    <nav id="navbar" class="navbar order-last order-lg-0">
+        <ul>
+            <li><i class="fa-solid fa-user pe-2"></i>@Model.Select(data => data.PatientFullName).FirstOrDefault()</li>
+        </ul>
+    </nav>
+}
+
+<section id="section-booking" data-aos="fade-in">
+    <div class="mask d-flex align-items-center h-100">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive table-scroll dynamic-height-table p-2">
+                                <table id="datatable" class="table caption-top table-striped mb-0">
+                                    <caption>Patient Activity Report</caption>
+                                    <thead class="thead-bgcolour">
+                                        <tr>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Activity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{var emptyReportText = "No report has been captured for this activity as yet";}
+                                        @foreach (var group in Model.GroupBy(report => report.Date))
+                                        {
+                                            <tr>
+                                                <td>@group.Key.ToString("yyyy-MM-dd")</td>
+                                                <td>
+                                                    @foreach (var report in group)
+                                                    {
+                                                        <strong>Activity:</strong> <br />
+                                                        @report.Title
+
+                                                        <br />
+                                                        <!-- Apply wrap-text class to allow text wrapping -->
+                                                        <strong>Report:</strong><br />
+
+                                                        <span class="wrap-text">@if (!string.IsNullOrWhiteSpace(report.ActivityReport)){@report.ActivityReport} else{@emptyReportText}</span>
+
+                                                        <br />
+                                                        <br />
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            new DataTable("#datatable", {
+                columnDefs: [
+                    
+                    { targets: [1], orderable: false, searchable: true }// Hide the 2nd column (Activity)
+                ]
+               
+            });
+        });
+    </script>
+}

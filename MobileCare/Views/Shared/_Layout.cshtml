@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MobileCare</title>   
+
+    <!-- Favicons -->
+    <link href="~/img/mobilecare-favicon-circular-32x32.png" rel="icon">   
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="~/lib/fontawesome-free/css/all.min.css" rel="stylesheet" />
+    <link href="~/lib/aos/aos.css" rel="stylesheet">  
+    <link href="~/lib/bootstrap/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/lib/datatables/datatables.bootstrap5.css" rel="stylesheet">
+    @await RenderSectionAsync("HtmlHead", required: false)    
+</head>
+
+
+
+<body>
+    <header id="header" class="fixed-top">
+        <!-- ======= Header ======= -->
+        <div class="container d-flex align-items-center">
+            <h1 class="logo me-2"><a asp-controller="Home" asp-action="Index">MobileCare</a></h1>
+            <a asp-controller="Home" asp-action="Index" class="logo me-auto"><img src="~/img/mobilecare-circle.png" alt="mobilecare logo"></a>            
+            <!-- Dynamic part of the header -->
+            @await RenderSectionAsync("HtmlHeader", required: false)
+            @if (!(ViewData["HideLoginButton"] != null && (bool)ViewData["HideLoginButton"]))
+            {
+                if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Account" asp-action="Logout" class="login-btn"><span class="d-none d-md-inline"></span> Logout</a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" class="login-btn"><span class="d-none d-md-inline"></span> Login</a>
+                }
+            }
+        </div>
+
+    </header><!-- End Header -->
+    @RenderBody()
+    
+    
+    <div id="preloader"></div>
+     <script src="~/lib/aos/aos.js"></script> 
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/datatables/datatables.js" asp-append-version="true"></script>
+    <script src="~/lib/datatables/datatables.bootstrap5.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)    
+    
+</body>
+</html>

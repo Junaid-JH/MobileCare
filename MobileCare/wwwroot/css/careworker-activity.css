@@ -1,0 +1,165 @@
+﻿#section-activity .ms-4 a:hover, #section-activity .ms-4 a:focus {
+    text-decoration: none;
+    outline: none;
+}
+
+#accordion .panel {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+#accordion .panel-heading {
+    padding: 0;
+    position: relative;
+}
+
+    #accordion .panel-heading:before {
+        content: "";
+        width: 40px;
+        height: 100%;
+        background: #eb65a0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+    }
+
+#accordion .panel-title a {
+    display: block;
+    padding: 10px 30px 10px 60px;
+    background: #f5f5f5;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #000;
+    overflow: hidden;
+    position: relative;
+}
+
+    #accordion .panel-title a:before,
+    #accordion .panel-title a.collapsed:before,
+    #accordion .panel-title a:after,
+    #accordion .panel-title a.collapsed:after {
+        content: "\f068";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        font-size: 15px;
+        color: #fff;
+        position: absolute;
+        top: 13px;
+        left: 13px;
+        z-index: 2;
+        transition: all 0.3s ease 0s;
+    }
+
+    #accordion .panel-title a:after,
+    #accordion .panel-title a.collapsed:after {
+        content: "\f067";
+        transform: translateY(50px);
+    }
+
+    #accordion .panel-title a.collapsed:before {
+        transform: translateY(-50px);
+    }
+
+    #accordion .panel-title a.collapsed:after {
+        transform: translateY(0);
+    }
+
+#accordion .panel-body {
+    padding: 10px 30px 10px 60px;
+    background: #f5f5f5;
+    border-top: none;
+    font-size: 15px;
+    color: #6f6f6f;
+    letter-spacing: 1px;
+    line-height: 28px;
+    position: relative;
+}
+
+    #accordion .panel-body:before {
+        content: "";
+        display: block;
+        width: 40px;
+        height: 100%;
+        background: rgba(0,0,0,0.05);
+        position: absolute;
+        top: 0;
+        left: 0;
+    }    
+
+.save,.add {
+    color: #27C46B;
+}
+
+.edit {
+    color: #FFC107;
+}
+.delete {
+    color: #E34724;
+}
+
+
+
+
+
+.save:hover, .add:hover {
+    cursor: pointer;
+    color: #27C46B !important; /* Prevent color change on hover */
+}
+
+.edit:hover {
+    cursor: pointer;
+    color: #FFC107 !important; /* Prevent color change on hover */
+}
+    
+    .delete:hover {
+        cursor: pointer;
+        color: #E34724 !important; /* Prevent color change on hover */
+    }
+
+        
+
+#section-activity {
+    
+    margin-top: 125px;
+}
+
+
+hr {
+    color: #3fbbc0!important;
+}
+
+.accordion-item {
+    border-bottom: 0.1px solid #3fbbc0 !important; /* Apply bottom border to all items */
+}
+
+    .accordion-item:first-child {
+        border-top: 0.1px solid #3fbbc0 !important; /* Apply top border to the first item */
+    }
+
+    .accordion-item + .accordion-item {
+        border-top: 0; /* Remove top border of subsequent items to prevent stacking */
+        margin-top: -1px; /* Adjust the margin to visually hide any gap caused by the border removal */
+    }
+
+#section-activity .accordion-button {
+    color: #444444;
+     /* Default color */
+    background-color: transparent; /* Default background color */
+    font-weight: bold; /* Default font weight */
+}
+
+ #section-activity .mt-3 a:hover{
+    color: black !important;
+    text-decoration: underline !important;
+}
+
+
+    
+
+    
+    

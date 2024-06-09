@@ -1,0 +1,299 @@
+﻿@model IEnumerable<MobileCare.Models.ViewModels.BookingActivityViewModel>
+@{
+    ViewData["Title"] = "Careworker: Activity";
+    string patientName = ViewData["PatientName"] as string;
+    string bookingId = ViewData["BookingId"] as string;
+    string careworkerName = ViewData["CareworkerName"] as string;
+    string careworkerUserId = ViewData["CareworkerUserId"] as string;
+}
+
+@section HtmlHead {
+    <link rel="stylesheet" href="~/css/careworker-activity.css" />
+}
+
+@section HtmlHeader {
+    <nav id="navbar" class="navbar order-last order-lg-0">
+        <ul>
+            <li><i class="fa-solid fa-user pe-2"></i>@careworkerName</li>            
+        </ul>
+    </nav>   
+}
+
+
+<!-- - Bootstrap Brain Component -->
+<section id="section-activity"  bsb-faq-3 py-3 py-md-5 py-xl-8" data-aos="fade-in">
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-12 col-md-10 col-lg-8 col-xl-7 col-xxl-6">
+                <h2 class="mb-4 display-5 text-center">Patient Details</h2>
+                <p class="text-secondary text-center lead fs-4">Activities</p>
+                <hr class="w-50 mx-auto mb-5 mb-xl-9 border-dark-subtle">
+            </div>
+        </div>
+    </div>
+
+    <!-- Patient Activity -->
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-11 col-xl-10">
+                <div class="d-flex align-items-end mb-5">
+                    <i class="bi bi-person-lines-fill me-3 lh-1 display-5"></i>
+                    <h3 class="m-0">@patientName</h3>
+                </div>
+                @{
+                    string activityNotesEmptyText = "No note has been captured for this activity";
+                    string bookingNotesEmptyText = "No patient note has been provided ";
+                }
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <strong>Success!</strong> @TempData["SuccessMessage"]
+                    </div>
+
+                }
+
+
+
+
+                <div class="accordion accordion-flush">                   
+                    @foreach (var bookingActivity in Model)
+                    {                       
+                        <div class="accordion-item bg-transparent py-3">
+                            <h2 class="accordion-header" id="heading-@bookingActivity.ActivityId">
+                                <button class="accordion-button collapsed bg-transparent fw-bold shadow-none link-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@bookingActivity.ActivityId" aria-expanded="false" aria-controls="collapse-@bookingActivity.ActivityId">
+                                    @bookingActivity.Title
+                                </button>
+                            </h2>
+                            <div id="collapse-@bookingActivity.ActivityId" class="accordion-collapse collapse" aria-labelledby="heading-@bookingActivity.ActivityId">
+                                <div class="accordion-body">
+                                    <p><em>Patient Note:</em></p>
+                                    <p>
+                                        @if (!string.IsNullOrWhiteSpace(bookingActivity.BookingNote))
+                                        {
+                                            @bookingActivity.BookingNote
+                                        }
+                                        else
+                                        {
+                                            @bookingNotesEmptyText
+                                        }
+                                    </p>
+                                    <p><em>Careworker Note:</em></p>
+                                    @{
+                                        var uniqueId = bookingActivity.ActivityId;
+                                    }
+                                    <p id="editableText-@(uniqueId.ToString())">
+                                        @if (!string.IsNullOrWhiteSpace(bookingActivity.ActivityNote))
+                                        {
+                                            @bookingActivity.ActivityNote
+                                        }
+                                        else
+                                        {
+                                            @activityNotesEmptyText
+                                        }
+                                    </p>
+                                    <form id="submitForm-@(bookingActivity.ActivityId)" class="d-none" method="post" action="@Url.Action("UpdateActivityNote", "Careworker")">
+                                        <input type="hidden" name="bookingId" value="@ViewData["BookingId"]" />
+                                        <input type="hidden" name="bookingActivityId" value="@bookingActivity.ActivityId" />                                       
+                                        <textarea id="textAreaSubmit-@(bookingActivity.ActivityId)" class="form-control"  name="activityNote" rows="3"></textarea>                                       
+                                    </form>
+                                </div>
+                                <div class="ms-4">
+                                    @if (!string.IsNullOrWhiteSpace(bookingActivity.ActivityNote))
+                                    {
+                                        <a id="edit-@(uniqueId.ToString())" class="edit me-2" title="Edit" onclick="editText(@uniqueId)"><i class="bi bi-pen-fill"></i></a>
+                                        <a id="save-@(uniqueId.ToString())" class="save d-none me-2" title="Save" onclick="saveText(@uniqueId)"><i class="bi bi-file-earmark-plus-fill"></i></a>
+                                        <a id="delete-@(uniqueId.ToString())" class="delete" title="Delete" onclick="removeActivityNote(@uniqueId)"><i class="bi bi-trash-fill"></i></a>
+                                    }
+                                    else
+                                    {
+                                        <a id="save-@(uniqueId.ToString())" class="save d-none me-2" title="Save" onclick="saveText(@uniqueId)"><i class="bi bi-file-earmark-plus-fill"></i></a>
+                                        <a id="edit-@(uniqueId.ToString())" class="edit d-none me-2" title="Edit" onclick="editText(@uniqueId)"><i class="bi bi-pen-fill"></i></a>
+                                        <a id="add-@(uniqueId.ToString())" class="add me-2" title="Add" onclick="addText(@uniqueId)"><i class="bi bi-file-earmark-plus-fill"></i></a>
+                                        <a id="delete-@(uniqueId.ToString())" class="delete d-none" title="Delete" onclick="removeActivityNote(@uniqueId)"><i class="bi bi-trash-fill"></i></a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="mt-3">
+                <a asp-action="GetBooking" asp-route-id="@careworkerUserId" class="link-dark">Previous</a>
+                </div>
+            </div>
+        </div>
+    </div>    
+</section>
+
+<!-- Bootstrap Confirmation Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to save the changes?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="showConfirmation()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this activity?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn" onclick="removeActivityNoteConfirmation()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>    
+        function addText(uniqueId) {
+            var uniqueIdString = uniqueId.toString();
+            //Checks if textarea already exists
+            if (document.getElementById('textEditTextarea-' + uniqueIdString)) {                 
+                if (document.getElementById('textEditTextarea-' + uniqueIdString).value === "") { return; }
+                else { console.log("inside else"); saveText(uniqueIdString); return; }                
+            }
+            
+            document.getElementById('add-' + uniqueIdString).classList.add('d-none');
+            document.getElementById('save-' + uniqueIdString).classList.remove('d-none');
+
+
+           //Retrieve paragraph element
+            var pTag = document.getElementById('editableText-' + uniqueIdString);
+            var currentText = pTag.innerText;
+            var parentWidth = pTag.parentNode.offsetWidth;
+            
+            //Create textarea
+            var textarea = document.createElement('textarea');
+            textarea.value = currentText;
+            textarea.id = 'textEditTextarea-' + uniqueIdString;
+            textarea.style.width = parentWidth + 'px';
+            textarea.style.overflowY = 'hidden';
+            textarea.style.borderRadius = "6px";
+            textarea.style.padding = "12px";
+
+            //Resize textarea based on text
+            textarea.oninput = function () {
+                autoResizeTextarea(uniqueIdString);
+            };
+            //Replace paragraph tag with textarea
+            pTag.parentNode.replaceChild(textarea, pTag);
+            textarea.style.height = (textarea.scrollHeight + 10) + 'px';
+
+            
+           //Retrieve textarea
+            var textarea = document.getElementById('textEditTextarea-' + uniqueIdString);            
+            textarea.value = "";         
+        }
+
+        function editText(uniqueId) {
+            
+            var uniqueIdString = uniqueId.toString();
+            console.log(uniqueIdString + typeof uniqueIdString);
+
+          
+            var pTag = document.getElementById('editableText-' + uniqueIdString);
+            console.log(pTag);
+            var currentText = pTag.innerText;
+            var parentWidth = pTag.parentNode.offsetWidth;
+           
+
+            var textarea = document.createElement('textarea');
+            textarea.value = currentText;
+            textarea.id = 'textEditTextarea-' + uniqueIdString;
+            textarea.style.width = parentWidth + 'px';
+            textarea.style.overflowY = 'hidden';
+            textarea.style.borderRadius = "6px";
+            textarea.style.padding = "12px";
+
+            textarea.oninput = function () {
+                autoResizeTextarea(uniqueIdString);
+            };
+
+            pTag.parentNode.replaceChild(textarea, pTag);
+            textarea.style.height = (textarea.scrollHeight + 10) + 'px';
+
+            document.getElementById('edit-' + uniqueIdString).classList.add('d-none');
+            document.getElementById('delete-' + uniqueIdString).classList.add('d-none');
+            document.getElementById('save-' + uniqueIdString).classList.remove('d-none');
+        }
+        //variable to be used by confirmation modal
+        var uniqueIdForConfirmation;
+
+
+        function saveText(uniqueId) {
+            var uniqueIdString = uniqueId.toString();
+            uniqueIdForConfirmation = uniqueIdString;
+            textarea = document.getElementById('textEditTextarea-' + uniqueIdString);
+            if (textarea.value == "") {
+                document.getElementById('save-' + uniqueIdString).classList.remove('d-none');
+                document.getElementById('add-' + uniqueIdString).classList.add('d-none');
+                return;
+            }
+            
+            $('#confirmationModal').modal('show');           
+        }
+
+        function autoResizeTextarea(uniqueIdString) {
+            var textarea = document.getElementById('textEditTextarea-' + uniqueIdString);
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+
+        function showConfirmation() {           
+            textarea = document.getElementById('textEditTextarea-' + uniqueIdForConfirmation)
+            var newText = textarea.value;
+
+            var newPTag = document.createElement('p');
+            newPTag.id = 'editableText-' + uniqueIdForConfirmation;
+            newPTag.innerText = newText;
+
+            textarea.parentNode.replaceChild(newPTag, textarea);
+             document.getElementById('save-' + uniqueIdForConfirmation).classList.add('d-none');
+             document.getElementById('edit-' + uniqueIdForConfirmation).classList.remove('d-none');
+            document.getElementById('delete-' + uniqueIdForConfirmation).classList.remove('d-none');
+
+
+            document.getElementById('textAreaSubmit-' + uniqueIdForConfirmation).value = newText;
+            document.getElementById("submitForm-" + uniqueIdForConfirmation).submit();
+            $('#confirmationModal').modal('hide');
+        }
+        //Variable to be used by delete confirmation modal
+        var uniqueIdForDeleteConfirmation;
+
+        function removeActivityNote(uniqueId) {
+            var uniqueIdString = uniqueId.toString();
+            uniqueIdForDeleteConfirmation = uniqueIdString;
+            $('#deleteConfirmationModal').modal('show');
+            
+        }
+
+        function removeActivityNoteConfirmation() {
+            document.getElementById('textAreaSubmit-' + uniqueIdForDeleteConfirmation).value = null;
+            document.getElementById("submitForm-" + uniqueIdForDeleteConfirmation).submit();
+            $('#deleteConfirmationModal').modal('hide');
+        }
+    </script>
+}

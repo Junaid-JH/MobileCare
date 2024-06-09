@@ -1,0 +1,86 @@
+﻿
+@model IEnumerable<MobileCare.Models.ViewModels.AdminViewModel>
+@{
+	ViewData["Title"] = "Admin";
+	
+}
+
+@section HtmlHead{
+    <link rel="stylesheet" href="~/css/booking.css" />
+}
+
+@section HtmlHeader{
+     
+    <nav id="navbar" class="navbar order-last order-lg-0">
+        <ul>
+            <li><i class="fa-solid fa-user pe-2"></i>Admin</li>
+        </ul>
+    </nav>    
+}
+
+
+    <section id="section-booking" data-aos="fade-in">        
+        <div class="mask d-flex align-items-center h-100">
+            <div class="container ">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body p-0">
+                                <div class="table-responsive table-scroll dynamic-height-table p-2" >
+                                    <table id="datatable" class="table caption-top table-striped mb-0">
+                                    <caption>Patient Bookings - Invoice</caption>
+                                        <thead class="thead-bgcolour">
+                                            <tr>
+                                                <th scope="col">Patient</th>
+                                                <th scope="col">Date</th>
+                                                <th scope="col">Time</th>
+                                            <th scope="col">Invoice</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var booking in Model)
+                                        {
+                                            <tr>
+                                                <td>
+                                                @booking.PatientFullName
+                                                    <div id="patient-address"><i class="fas fa-map-marker-alt me-1"></i>@booking.StreetAddress, @booking.Suburb, @booking.City, @booking.PostalCode, @booking.Country</div>                                                        
+                                                </td>
+                                                <td>@booking.Date.ToString("yyyy-MM-dd")</td>
+                                                <td>@booking.StartTime.ToString("hh\\:mm") - @booking.EndTime.ToString("hh\\:mm")</td>
+                                                <td><a  href="/Admin/GenerateInvoice?patientName=@booking.PatientFullName&streetAddress=@booking.StreetAddress&suburb=@booking.Suburb&city=@booking.City&postalCode=@booking.PostalCode&country=@booking.Country&bookingId=@booking.Id&careworkerName=@booking.CareworkerFullName"  class="link-dark">Download Invoice</a></td>
+                                            </tr>
+                                        }                                    
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>       
+    </section>
+
+
+@section Scripts{
+    <script>
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            new DataTable("#datatable", {
+                columnDefs: [
+                    { targets: [2], orderable: false, searchable: false },// Hide the third column (Time)
+                    { targets: [3], orderable: false, searchable: false }// Hide the fourth column (Invoice)
+                ],
+                order: [[1, 'asc']] // Order by the second column (date) in ascending order by default
+            });
+        });
+    </script>
+}
+
+
+
+
+    
+
+
+
